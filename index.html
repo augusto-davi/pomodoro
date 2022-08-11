@@ -5,122 +5,48 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Pomodoro</title>
+    <link
+      rel="shortcut icon"
+      href="assets/icons/red-activity.png"
+      type="image/x-icon"
+    />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="shortcut icon" href="red-circle.png" type="image/x-icon" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Mono&display=swap"
+      rel="stylesheet"
+    />
     <link
       href="https://fonts.googleapis.com/css2?family=Inter&display=swap"
       rel="stylesheet"
     />
-    <style>
-      :root {
-        font-size: clamp(1rem, 4px + 1vw, 2rem);
-        --bg: #de350b;
-      }
-      * {
-        box-sizing: border-box;
-        font-family: 'Inter', sans-serif;
-      }
-
-      body {
-        background: var(--bg);
-        color: #fff;
-        font-family: Arial, Helvetica, sans-serif;
-        transition: 1.5s;
-      }
-
-      .layout {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        width: 100%;
-        max-width: 640px;
-        margin: 0 auto;
-      }
-
-      .timer-options {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: space-between;
-        width: 100%;
-      }
-
-      #timer {
-        font-size: 6.25rem;
-        margin: 2rem;
-      }
-
-      [class*='btn'] {
-        padding: 0.5rem 2rem;
-        font-size: inherit;
-      }
-    </style>
+    <link rel="stylesheet" href="assets/css/style.css" />
+    <link rel="stylesheet" href="assets/css/button-transitions.css" />
   </head>
+  <script defer type="module" src="assets/index.js"></script>
   <body>
     <div class="layout">
+      <h1 class="timer-title">pomodoro</h1>
       <div class="timer-options">
-        <button class="btn-options-activity" data-timer="25">Atividade</button>
-        <button class="btn-options-short-break" data-timer="5">
-          Intervalo curto
+        <button class="btn-options-activity" data-status="worktime">
+          Atividade
         </button>
-        <button class="btn-options-long-break" data-timer="15">
-          Intervalo longo
+        <button class="btn-options-short-break" data-status="minor">
+          Intervalo menor
+        </button>
+        <button class="btn-options-long-break" data-status="major">
+          Intervalo maior
         </button>
       </div>
       <div id="timer">25:00</div>
-      <button class="btn-timer">Iniciar</button>
+      <button
+        class="btn-primary-timer"
+        data-timer="25"
+        data-status="worktime"
+        data-nextcolor="#0d9488"
+      >
+        Iniciar
+      </button>
     </div>
-    <script>
-      const $btnTimer = document.querySelector('.btn-timer');
-      const $display = document.querySelector('#timer');
-      const $timerOptions = document.querySelectorAll('[class*=btn-options]');
-
-      $timerOptions.forEach((options) =>
-        options.addEventListener('click', handleOptions)
-      );
-
-      const obj = {
-        5: '#0052cc',
-        15: '#172b4d',
-        25: '#de350b',
-      };
-
-      function handleOptions() {
-        const values = this.dataset.timer;
-        document.documentElement.style.setProperty(`--bg`, obj[values]);
-      }
-
-      let defaultTimer = 60 * 25 - 1;
-      let isRunning = false;
-      let u = false;
-
-      function timerDisplay() {
-        const minutes = parseInt(defaultTimer / 60, 10);
-        const seconds = parseInt(defaultTimer % 60, 10);
-
-        const formatMinutes = minutes < 10 ? `0${minutes}` : minutes;
-        const formatSeconds = seconds < 10 ? `0${seconds}` : seconds;
-        $display.textContent = `${formatMinutes}:${formatSeconds}`;
-        if (--defaultTimer < 0) clearInterval(isRunning);
-      }
-
-      function x() {
-        --defaultTimer;
-      }
-
-      function handleTimer() {
-        if (!isRunning) {
-          $btnTimer.textContent = 'Parar';
-          isRunning = setInterval(timerDisplay, 1000);
-        } else {
-          $btnTimer.textContent = 'Iniciar';
-          clearInterval(isRunning);
-          isRunning = false;
-        }
-      }
-
-      $btnTimer.addEventListener('click', handleTimer);
-    </script>
   </body>
 </html>
