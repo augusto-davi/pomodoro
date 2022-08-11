@@ -9,7 +9,7 @@ const $btnTimerOptions = document.querySelectorAll('[class*=btn-options]');
 let defaultTimer = 60 * 25 - 1;
 let isRunning = false; // false | setInterval()
 
-// TODO: notification, progressbar
+// TODO: notification, progressbar, dynamic title
 
 function resetTimer(updateTimer) {
   clearInterval(isRunning);
@@ -47,21 +47,31 @@ function updateTimerButtonDataset() {
   }
 }
 
-function timerDisplay() {
+function updateDisplay(minutes, seconds) {
+  $display.textContent = `${minutes}:${seconds}`;
+  document.title = `${minutes}:${seconds} - Pomodoro`;
+}
+
+function resetDisplay() {
+  $btnTimer.textContent = 'Iniciar';
+  $display.textContent = `${
+    $btnTimer.dataset.timer === '5' ? '05' : $btnTimer.dataset.timer
+  }:00`;
+}
+
+function runTimer() {
   const minutes = parseInt(defaultTimer / 60, 10);
   const seconds = parseInt(defaultTimer % 60, 10);
-
   const formatMinutes = minutes < 10 ? `0${minutes}` : minutes;
   const formatSeconds = seconds < 10 ? `0${seconds}` : seconds;
-  $display.textContent = `${formatMinutes}:${formatSeconds}`;
+
+  updateDisplay(formatMinutes, formatSeconds);
+
   if (defaultTimer === 0) {
     clearInterval(isRunning);
     resetTimer($btnTimer.dataset.timer);
     toggleBackgroundColor($btnTimer.dataset.nextcolor);
-    $btnTimer.textContent = 'Iniciar';
-    $display.textContent = `${
-      $btnTimer.dataset.timer === 5 ? '05' : $btnTimer.dataset.timer
-    }:00`;
+    resetDisplay();
     updateTimerButtonDataset();
   }
   decreaseDefaultTimer(() => {
@@ -72,7 +82,7 @@ function timerDisplay() {
 function handleTimer() {
   if (!isRunning) {
     $btnTimer.textContent = 'Parar';
-    isRunning = setInterval(timerDisplay, 1000);
+    isRunning = setInterval(runTimer, 1000);
     updateTimerButtonDataset();
     return;
   }
